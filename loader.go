@@ -24,13 +24,17 @@ var free_context func(ctx uintptr)
 var embed_size func(model uintptr) int32
 var embed_text func(model uintptr, text string, out_embeddings []float32, out_tokens *uint32) int
 
+var loaded = false
+
 func init() {
 	libpath, err := findLlama()
 	if err != nil {
-		panic(err)
+		fmt.Printf("Failed to find library: %v\n", err)
+		return
 	}
 	if libptr, err = load(libpath); err != nil {
-		panic(err)
+		fmt.Printf("Failed to load library %s: %v\n", libpath, err)
+		return
 	}
 
 	// Load the library functions
@@ -44,6 +48,7 @@ func init() {
 
 	// Initialize the library (Log level WARN)
 	load_library(2)
+	loaded = true
 }
 
 // --------------------------------- Library Lookup ---------------------------------

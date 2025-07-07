@@ -18,6 +18,9 @@ type Vectorizer struct {
 
 // NewVectorizer creates a new vectorizer model from the given model file.
 func NewVectorizer(modelPath string, gpuLayers int) (*Vectorizer, error) {
+	if !loaded {
+		return nil, fmt.Errorf("library not loaded, please check if the library is available")
+	}
 	handle := load_model(modelPath, uint32(gpuLayers))
 	if handle == 0 {
 		return nil, fmt.Errorf("failed to load model (%s)", modelPath)
